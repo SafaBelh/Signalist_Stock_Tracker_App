@@ -394,6 +394,7 @@
     background-color: #141414 !important;
     border-radius: 8px !important;
     overflow: hidden !important;
+    padding: 5px;
 }
 
 .tv-embed-widget-wrapper__body {
