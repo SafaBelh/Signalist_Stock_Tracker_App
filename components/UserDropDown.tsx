@@ -14,15 +14,15 @@ import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
 import NavItems from "./NavItems";
+import { signOut } from "@/lib/actions/auth.actions";
 
-const UserDropDown = () => {
+const UserDropDown = ({ user }: { user: User }) => {
   const router = useRouter();
 
   const handleSignOut = async () => {
+    await signOut()
     router.push("/sign-in");
   };
-
-  const user = { name: "John", email: "contact@john.com" };
 
   return (
     <DropdownMenu>
@@ -72,14 +72,15 @@ const UserDropDown = () => {
         </DropdownMenuItem>
 
         <DropdownMenuSeparator className="hidden sm:block bg-gray-600" />
-         
-         <nav className="sm:hidden">
-            <NavItems />
-         </nav>
 
+        <nav className="">
+          <NavItems />
+        </nav>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
 
 export default UserDropDown;
+
+
