@@ -112,24 +112,24 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
-/* === CUSTOM COLOR THEME === */
+/* === CUSTOM COLOR THEME — Neon Purple / Pink / Green === */
 @theme {
   /* Extended Gray Scale */
-  --color-gray-900: #050505;
-  --color-gray-800: #141414;
-  --color-gray-700: #212328;
-  --color-gray-600: #30333a;
-  --color-gray-500: #9095a1;
-  --color-gray-400: #ccdadc;
+  --color-gray-900: #050505; /* keep deep black */
+  --color-gray-800: #121212; /* near-black */
+  --color-gray-700: #1e1e24; /* dark neutral */
+  --color-gray-600: #2b2b34; /* subtle contrast */
+  --color-gray-500: #9a9ab0; /* mid gray for text */
+  --color-gray-400: #d2d2e0; /* light gray */
 
-  /* Vibrant Colors */
-  --color-blue-600: #5862ff;
-  --color-yellow-400: #fdd458;
-  --color-yellow-500: #e8ba40;
-  --color-teal-400: #0fedbe;
-  --color-red-500: #ff495b;
-  --color-orange-500: #ff8243;
-  --color-purple-500: #d13bff;
+  /* Vibrant Neon Colors */
+  --color-blue-600: #8b5cf6; /* vibrant neon purple */
+  --color-yellow-400: #8b5cf6; /* neon magenta/pink */
+  --color-yellow-500: #a080eb; /* neon green (main highlight) */
+  --color-teal-400: #00f0ff; /* neon cyan accent */
+  --color-red-500: #ff1f6f; /* hot pink/red hybrid */
+  --color-orange-500: #ff6ec7; /* neon pink-orange glow */
+  --color-purple-500: #b026ff; /* bright electric purple */
 }
 
 @layer base {
@@ -254,10 +254,10 @@
     @apply w-full grid-cols-1 gap-6 xl:grid-cols-3 space-y-6 sm:space-y-8;
   }
   .watchlist-btn {
-    @apply bg-yellow-500 text-base hover:bg-yellow-500 text-gray-900 w-full rounded h-11 font-semibold cursor-pointer;
+    @apply bg-yellow-500 text-base hover:bg-yellow-500 text-gray-400 w-full rounded h-11 font-semibold cursor-pointer;
   }
   .watchlist-remove {
-    @apply bg-red-500! hover:bg-red-500! text-gray-900!;
+    @apply bg-red-500! hover:bg-red-500! text-gray-500!;
   }
   .watchlist-empty-container {
     @apply container gap-8 flex-col items-center md:mt-10 p-6 text-center;
