@@ -3,12 +3,27 @@ import {
   NEWS_SUMMARY_EMAIL_PROMPT,
   PERSONALIZED_WELCOME_EMAIL_PROMPT,
 } from "@/lib/inngest/prompts";
+import {
+  STOCK_ALERT_UPPER_EMAIL_TEMPLATE,
+  STOCK_ALERT_LOWER_EMAIL_TEMPLATE,
+} from "@/lib/nodemailer/templates";
+
 import { sendWelcomeEmail } from "@/lib/nodemailer";
 import { getAllUsersForNewsEmail } from "@/lib/actions/user.action";
 import { getWatchlistSymbolsByEmail } from "@/lib/actions/watchlist.actions";
 import { getNews } from "@/lib/actions/finnhub.actions";
 import { formatDateToday } from "../utils";
 import { sendNewsSummaryEmail } from "@/lib/nodemailer";
+
+interface AlertEventData {
+  email: string;
+  symbol: string;
+  company: string;
+  targetPrice: string;
+  alertType: "upper" | "lower";
+  currentPrice: string;
+}
+
 
 export const sendSignUpEmail = inngest.createFunction(
   { id: "sign-up-email" },
@@ -130,7 +145,7 @@ export const sendDailyNewsSummary = inngest.createFunction(
 
           return await sendNewsSummaryEmail({
             email: user.email,
-            date: formatDateToday,
+            date: formatDateToday(),
             newsContent,
           });
         })
@@ -141,5 +156,36 @@ export const sendDailyNewsSummary = inngest.createFunction(
       success: true,
       message: "Daily news summary emails sent successfully !",
     };
+  }
+);
+
+export const sendStockAlertEmail = inngest.createFunction(
+  { id: "send-stock-alert-email" },
+  { event: "app/alert.created" }, // Triggered whenever a new alert is created
+  async ({ event, step }) => {
+    const { email, symbol, company, targetPrice, alertType, currentPrice } =
+      event.data as AlertEventData;
+
+    const template =
+      alertType === "upper"
+        ? STOCK_ALERT_UPPER_EMAIL_TEMPLATE
+        : STOCK_ALERT_LOWER_EMAIL_TEMPLATE;
+
+    const htmlContent = template
+      .replace(/{{symbol}}/g, symbol)
+      .replace(/{{company}}/g, company)
+      .replace(/{{targetPrice}}/g, targetPrice)
+      .replace(/{{currentPrice}}/g, currentPrice)
+      .replace(/{{timestamp}}/g, new Date().toLocaleString());
+
+    await step.run("send-alert-email", async () => {
+      return sendNewsSummaryEmail({
+        email,
+        date: formatDateToday(),
+        newsContent: htmlContent, // reusing sendNewsSummaryEmail; you can create a generic sendEmail function
+      });
+    });
+
+    return { success: true, message: "Stock alert email sent successfully" };
   }
 );
