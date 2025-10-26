@@ -1,5 +1,5 @@
 "use client";
-
+import { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -22,8 +22,14 @@ interface WatchlistTableProps {
   }[];
 }
 import { Star } from "lucide-react";
+import AlertModal from "@/components/AlertModal";
 
 export default function WatchlistTable({ watchlist }: WatchlistTableProps) {
+  const [isAlertOpen, setAlertOpen] = useState(false);
+  const [selectedStock, setSelectedStock] = useState<
+    WatchlistTableProps["watchlist"][0] | null
+  >(null);
+
   if (!watchlist || watchlist.length === 0) {
     return (
       <p className="text-gray-400 text-center mt-6">
@@ -107,7 +113,13 @@ export default function WatchlistTable({ watchlist }: WatchlistTableProps) {
               </TableCell>
 
               <TableCell className="px-4 py-1 border border-[#2a2a2a]">
-                <button className="bg-[#facc15b0] hover:bg-[#facc1557] text-white px-2 py-1 rounded-[5px] text-[13px] transition-colors cursor-pointer">
+                <button
+                  className="bg-[#facc15b0] hover:bg-[#facc1557] text-white px-2 py-1 rounded-[5px] text-[13px] transition-colors cursor-pointer"
+                  onClick={() => {
+                    setSelectedStock(item);
+                    setAlertOpen(true);
+                  }}
+                >
                   Add Alert
                 </button>
               </TableCell>
@@ -115,6 +127,21 @@ export default function WatchlistTable({ watchlist }: WatchlistTableProps) {
           ))}
         </TableBody>
       </Table>
+      <AlertModal
+        open={isAlertOpen}
+        setOpen={setAlertOpen}
+        alertData={
+          selectedStock
+            ? {
+                symbol: selectedStock.symbol,
+                company: selectedStock.company,
+                alertName: "",
+                alertType: "upper",
+                threshold: "",
+              }
+            : undefined
+        }
+      />{" "}
     </div>
   );
 }
