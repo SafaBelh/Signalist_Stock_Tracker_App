@@ -81,13 +81,7 @@ export default function WatchlistTable({ watchlist }: WatchlistTableProps) {
               <TableCell className="px-4 py-1 text-gray-300 border border-[#2a2a2a]">{item.peRatio}</TableCell>
 
               <TableCell className="px-4 py-1 border border-[#2a2a2a]">
-                <button
-                  className="bg-[#facc15b0] hover:bg-[#facc1557] text-white px-2 py-1 rounded-[5px] text-[13px] transition-colors cursor-pointer"
-                  onClick={() => {
-                    setSelectedStock(item);
-                    setAlertOpen(true);
-                  }}
-                >
+                <button className="bg-[#facc15b0] hover:bg-[#facc1557] text-white px-2 py-1 rounded-[5px] text-[13px] transition-colors cursor-pointer">
                   Add Alert
                 </button>
               </TableCell>
