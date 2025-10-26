@@ -8,9 +8,23 @@ import {
   COMPANY_PROFILE_WIDGET_CONFIG,
   COMPANY_FINANCIALS_WIDGET_CONFIG,
 } from "@/lib/constants";
+import { auth } from "@/lib/better-auth/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function StockDetails({ params }: StockDetailsPageProps) {
   const { symbol } = await params;
+
+  // fetch session for this page
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user) redirect("/sign-in");
+
+  const user = {
+    id: session.user.id,
+    email: session.user.email,
+    name: session.user.name,
+  };
+
   const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
   return (
     <div className="flex flex-col lg:flex-row min-h-screen gap-7 p-4">
@@ -43,7 +57,9 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
           symbol={symbol.toUpperCase()}
           company={symbol.toUpperCase()}
           isInWatchlist={false}
+          userEmail={user.email}
         />
+
 
         <TradingViewWidget
           scriptUrl={`${scriptUrl}technical-analysis.js`}

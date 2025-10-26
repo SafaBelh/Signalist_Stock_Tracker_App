@@ -33,7 +33,7 @@ const UserDropDown = ({ user , initialStocks}: { user: User , initialStocks : St
         >
           <Avatar className="h-8 w-8">
             <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback className="bg-yellow-500 text-yellow-900 text-sm font-bold">
+            <AvatarFallback className="bg-yellow-500 text-gray-400 text-sm font-bold">
               {user.name[0]}
             </AvatarFallback>
           </Avatar>
