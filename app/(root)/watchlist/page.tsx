@@ -6,9 +6,6 @@ import { Watchlist } from "@/database/models/watchlist.model";
 import WatchlistTable from "@/components/WatchlistTable";
 import { getWatchlistData } from "@/lib/actions/finnhub.actions";
 
-
-
-
 const WatchlistPage = async () => {
   // 1️⃣ Get current session
   const session = await auth.api.getSession({ headers: await headers() });
@@ -38,10 +35,6 @@ const WatchlistPage = async () => {
       addedAt: item.addedAt,
     };
   });
-
-
-
-
 
   return (
     <div className="flex flex-col min-h-screen gap-7 p-4">
