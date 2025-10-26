@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,22 +17,27 @@ const ALERT_TYPES = [
   { value: "lower", label: "Lower Threshold" },
 ];
 
+interface AlertData {
+  symbol: string;
+  company: string;
+  alertName: string;
+  alertType: "upper" | "lower";
+  threshold: string;
+}
+
 interface AlertModalProps {
   alertData?: AlertData;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
-const AlertModal: React.FC<AlertModalProps> = ({
-  alertData,
-  open,
-  setOpen,
-}) => {
+const AlertModal: React.FC<AlertModalProps> = ({ alertData, open, setOpen }) => {
   const {
     register,
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm<AlertData>({
     defaultValues: alertData || {
       symbol: "",
@@ -43,14 +48,30 @@ const AlertModal: React.FC<AlertModalProps> = ({
     },
   });
 
-  console.log("Alert Modal alertData:", alertData);
+  // Reset form whenever alertData changes
+  useEffect(() => {
+    if (alertData) reset(alertData);
+  }, [alertData, reset]);
+
+  // Optional: clear form when modal closes
+  useEffect(() => {
+    if (!open) {
+      reset({
+        symbol: "",
+        company: "",
+        alertName: "",
+        alertType: "upper",
+        threshold: "",
+      });
+    }
+  }, [open, reset]);
 
   const onSubmit = async (data: AlertData) => {
     try {
       console.log("Submitted alert:", data);
       toast.success("Alert saved!");
       setOpen(false);
-      // Here you can convert to Alert type and save to DB/Inngest
+      // TODO: save alert to DB or Inngest
     } catch (err) {
       console.error(err);
       toast.error("Failed to save alert");
@@ -59,9 +80,9 @@ const AlertModal: React.FC<AlertModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-lg alert-dialog ">
+      <DialogContent className="sm:max-w-lg alert-dialog">
         <DialogHeader>
-          <DialogTitle>Add New Alert </DialogTitle>
+          <DialogTitle>Add New Alert</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -112,11 +133,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
             validation={{ required: "Threshold is required" }}
           />
 
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="yellow-btn w-full mt-5"
-          >
+          <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5">
             {isSubmitting ? "Creating ..." : "Create Alert"}
           </Button>
         </form>
