@@ -25,10 +25,10 @@ export const sendWelcomeEmail = async ({
   );
 
   const mailOptions = {
-    from: `Signalist <signalist@safabelhtrading.pro>`,
+    from: `AuraLyst <auralyst@safabelhtrading.pro>`,
     to: email,
-    subject: `Welcome to Signalist - your stock market toolkit is ready!`,
-    text: "Thanks for joining Signalist",
+    subject: `Welcome to AuraLyst - your stock market toolkit is ready!`,
+    text: "Thanks for joining AuraLyst",
     html: htmlTemplate,
   };
 
@@ -50,10 +50,10 @@ export const sendNewsSummaryEmail = async ({
   ).replace("{{newsContent}}", newsContent);
 
   const mailOptions = {
-    from: `Signalist News <signalist@safabelhtrading.pro>`,
+    from: `AuraLyst News <auralyst@safabelhtrading.pro>`,
     to: email,
     subject: `📈 Market News Summary Today - ${date}`,
-    text: `Today's market news summary from Signalist`,
+    text: `Today's market news summary from AuraLyst`,
     html: htmlTemplate,
   };
 
@@ -80,7 +80,7 @@ export const sendUpperAlertEmail = async ({
     .replace("{{timestamp}}", new Date().toLocaleString());
 
   await transporter.sendMail({
-    from: "Signalist Alerts <signalist@safabelhtrading.pro>",
+    from: "AuraLyst Alerts <auralyst@safabelhtrading.pro>",
     to: email,
     subject: `📈 Price Alert: ${symbol} Hit Upper Target`,
     html,
@@ -107,7 +107,7 @@ export const sendLowerAlertEmail = async ({
     .replace("{{timestamp}}", new Date().toLocaleString());
 
   await transporter.sendMail({
-    from: "Signalist Alerts <signalist@safabelhtrading.pro>",
+    from: "AuraLyst Alerts <auralyst@safabelhtrading.pro>",
     to: email,
     subject: `📉 Price Alert: ${symbol} Hit Lower Target`,
     html,
