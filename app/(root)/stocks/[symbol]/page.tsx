@@ -1,3 +1,4 @@
+// app/stocks/[symbol]/page.tsx
 import TradingViewWidget from "@/components/TradingViewWidget";
 import WatchlistButton from "@/components/WatchlistButton";
 import {
@@ -19,6 +20,7 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) redirect("/sign-in");
 
+  // Convert to plain object
   const user = {
     id: session.user.id,
     email: session.user.email,
@@ -57,9 +59,8 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
           symbol={symbol.toUpperCase()}
           company={symbol.toUpperCase()}
           isInWatchlist={false}
-          userEmail={user.email}
+          userEmail={user.email!} // Add ! to ensure it's not undefined
         />
-
 
         <TradingViewWidget
           scriptUrl={`${scriptUrl}technical-analysis.js`}

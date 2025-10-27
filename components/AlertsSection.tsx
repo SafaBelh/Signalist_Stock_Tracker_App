@@ -25,19 +25,13 @@ export const AlertsSection = ({ alerts }: AlertsSectionProps) => {
     return (
       <div className="bg-gray-800 rounded-lg p-6 text-center border border-gray-700 tradingview-widget-container">
         <div className="flex flex-col items-center justify-center space-y-4">
-          <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+          <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center mt-3">
             <Bell className="w-6 h-6 text-gray-400" />
           </div>
           <div>
-            <h3 className="font-semibold text-xl text-gray-100 mb-2">Alerts</h3>
             <p className="text-gray-400 mb-4">No alerts set up yet</p>
           </div>
-          <Link
-            href="/alerts"
-            className="bg-[#facc15b0] hover:bg-[#facc1557] text-white rounded-[5px] text-sm transition-colors cursor-pointer h-8 flex items-center justify-center px-4 font-semibold"
-          >
-            Create Alert
-          </Link>
+         
         </div>
       </div>
     );

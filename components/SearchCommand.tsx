@@ -13,16 +13,29 @@ import Link from "next/link";
 import { searchStocks } from "@/lib/actions/finnhub.actions";
 import { useDebounce } from "@/hooks/useDebounce";
 
+interface SearchCommandProps {
+  renderAs?: "text" | "button";
+  label?: string;
+  initialStocks: StockWithWatchlistStatus[];
+  open?: boolean; // Add controlled open prop
+  onOpenChange?: (open: boolean) => void; // Add controlled onOpenChange
+}
+
 export default function SearchCommand({
   renderAs = "button",
   label = "Add stock",
   initialStocks,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
 }: SearchCommandProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
-  const [stocks, setStocks] =
-    useState<StockWithWatchlistStatus[]>(initialStocks);
+  const [stocks, setStocks] = useState<StockWithWatchlistStatus[]>(initialStocks);
+
+  // Use controlled state if provided, otherwise use internal state
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setIsOpen = controlledOnOpenChange || setInternalOpen;
 
   const isSearchMode = !!searchTerm.trim();
   const displayStocks = isSearchMode ? stocks : stocks?.slice(0, 10);
@@ -31,12 +44,12 @@ export default function SearchCommand({
     const onKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setOpen((v) => !v);
+        setIsOpen((v) => !v);
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [setIsOpen]);
 
   const handleSearch = async () => {
     if (!isSearchMode) return setStocks(initialStocks);
@@ -59,25 +72,33 @@ export default function SearchCommand({
   }, [searchTerm]);
 
   const handleSelectStock = () => {
-    setOpen(false);
+    setIsOpen(false);
     setSearchTerm("");
     setStocks(initialStocks);
   };
 
+  // Reset search when dialog closes
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchTerm("");
+      setStocks(initialStocks);
+    }
+  }, [isOpen, initialStocks]);
+
   return (
     <>
       {renderAs === "text" ? (
-        <span onClick={() => setOpen(true)} className="search-text">
+        <span onClick={() => setIsOpen(true)} className="search-text">
           {label}
         </span>
       ) : (
-        <Button onClick={() => setOpen(true)} className="search-btn">
+        <Button onClick={() => setIsOpen(true)} className="search-btn">
           {label}
         </Button>
       )}
       <CommandDialog
-        open={open}
-        onOpenChange={setOpen}
+        open={isOpen}
+        onOpenChange={setIsOpen}
         className="search-dialog"
       >
         <div className="search-field">
